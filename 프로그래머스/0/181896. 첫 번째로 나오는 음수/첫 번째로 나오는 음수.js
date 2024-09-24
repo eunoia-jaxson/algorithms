@@ -1,10 +1,3 @@
 function solution(num_list) {
-    var answer = -1;
-    num_list.some((e, i) => {
-       if (e < 0) {
-           answer = i;
-           return true;
-       } 
-    });
-    return answer;
+    return num_list.findIndex(e => e < 0);
 }
