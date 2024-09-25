@@ -1,6 +1,8 @@
 function solution(arr, queries) {
     queries.forEach(([s, e]) => {
-        arr.forEach((_, i) => s <= i && i <= e ? arr[i] += 1 : null);
+        for (let i = s; i <= e; i++) {
+            arr[i] += 1;
+        }
     });
     return arr;
 }
