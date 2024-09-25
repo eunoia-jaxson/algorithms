@@ -1,23 +1,23 @@
 function solution(genres, plays) {
     let sum = new Map();
     const answer = [];
-    let songs = genres.map((e, i) => {
-        sum.set(e, (sum.get(e) || 0) + plays[i]);
-        return {
-            genre: e,
-            count: plays[i]
-        };
-    });
+    genres.map((e, i) => sum.set(e, (sum.get(e) || 0) + plays[i]));
     sum = Array.from(sum.entries()).sort((a, b) => b[1] - a[1]);
+    
     sum.forEach(e => {
-        const song = songs.filter(item => item.genre === e[0]).map(item => item.count);
-        answer.push(plays.indexOf(Math.max(...song)));
+        const indices = genres.reduce((acc, value, index) => {
+          if (value === e[0]) acc.push(index);
+          return acc;
+        }, []);
+        const song = indices.map(i => plays[i]);
+        const max = Math.max(...song);
+        
+        answer.push(plays.indexOf(max));
         if (song.length > 1) {
-            songs[songs.findIndex(item => item.count === Math.max(...song))].count = 0;
-            plays[plays.findIndex(item => item === Math.max(...song))] = 0;
-            answer.push(plays.indexOf(Math.max(...songs.filter(item => item.genre === e[0]).map(item => item.count))));
-            
+            plays[plays.findIndex(item => item === max)] = 0;
+            answer.push(plays.indexOf(Math.max(...indices.map(i => plays[i]))));
         }
     });
+    
     return answer;
 }
