@@ -1,11 +1,10 @@
 function solution(arr) {
-    var answer = 0;
+    var answer = -1;
     let array = [];
-    while (true) {
-        array = arr.map(e => e >= 50 && !(e % 2) ? e / 2 : e < 50 && e % 2 ? e * 2 + 1 : e);
-        if (JSON.stringify(arr) === JSON.stringify(array)) break;
+    while (JSON.stringify(arr) !== JSON.stringify(array)) {
+        array = arr;
+        arr = arr.map(e => e >= 50 && !(e % 2) ? e / 2 : e < 50 && e % 2 ? e * 2 + 1 : e);
         answer += 1;
-        arr = array;
     }
     return answer;
 }
