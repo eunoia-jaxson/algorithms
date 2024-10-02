@@ -1,3 +1,3 @@
 function solution(order) {
-    return order.map(e => e.includes("latte") ? 5000 : 4500).reduce((acc, curr) => acc + curr);
+    return order.reduce((acc, curr) => acc + (curr.includes("latte") ? 5000 : 4500), 0);
 }
