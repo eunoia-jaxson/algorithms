@@ -1,3 +1,3 @@
 function solution(n) {
-    return 2 - (Math.sqrt(n) === Math.floor(Math.sqrt(n)));
+    return 2 - Number.isInteger(Math.sqrt(n));
 }
