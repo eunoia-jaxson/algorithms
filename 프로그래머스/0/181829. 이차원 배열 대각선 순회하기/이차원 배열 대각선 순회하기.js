@@ -1,3 +1,3 @@
 function solution(board, k) {
-    return board.map((e, i) => e.filter((_, j) => i + j <= k)).flat().reduce((acc, curr) => acc + curr);
+    return board.flatMap((e, i) => e.filter((_, j) => i + j <= k)).reduce((acc, curr) => acc + curr);
 }
