@@ -10,6 +10,7 @@ readline.on('line', function(line) {
 }).on('close', function(){
 	const [N, M, ingredients] = input;
     let answer = 0;
+    
     ingredients.sort((a, b) => b - a);
     for (let i = 0; i < N - 1; i++) {
         const current = ingredients.shift();
