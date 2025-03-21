@@ -11,9 +11,9 @@ readline.on('line', function(line) {
 	const [N, M, ingredients] = input;
     let answer = 0;
     
-    ingredients.sort((a, b) => b - a);
+    ingredients.sort((a, b) => a - b);
     for (let i = 0; i < N - 1; i++) {
-        const current = ingredients.shift();
+        const current = ingredients.pop();
         if (ingredients.includes(M - current)) {
             answer += 1;
         }
