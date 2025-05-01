@@ -5,30 +5,21 @@ const N = parseInt(input[0]);
 const M = parseInt(input[1]);
 const S = input[2];
 
-function countPatternOccurrences(N, S) {
-    const patternLength = 2 * N + 1;
-    let count = 0;
+function findIOIPatterns(N, S) {
+    const count = new Array(M).fill(0);
+    let result = 0;
     
-    for (let i = 0; i <= S.length - patternLength; i++) {
-        let isPattern = true;
-        
-        for (let j = 0; j < patternLength; j++) {
-            if (j % 2 === 0 && S[i + j] !== 'I') {
-                isPattern = false;
-                break;
+    for (let i = 2; i < M; i++) {
+        if (S[i] === 'I' && S[i-1] === 'O' && S[i-2] === 'I') {
+            count[i] = count[i-2] + 1;
+            
+            if (count[i] >= N) {
+                result += 1;
             }
-            if (j % 2 === 1 && S[i + j] !== 'O') {
-                isPattern = false;
-                break;
-            }
-        }
-        
-        if (isPattern) {
-            count++;
         }
     }
     
-    return count;
+    return result;
 }
 
-console.log(countPatternOccurrences(N, S));
+console.log(findIOIPatterns(N, S));
