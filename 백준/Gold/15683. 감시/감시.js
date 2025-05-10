@@ -1,5 +1,4 @@
 const fs = require('fs');
-
 const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\n');
 const [N, M] = input[0].split(' ').map(Number);
 const office = input.slice(1).map(line => line.split(' ').map(Number));
@@ -16,21 +15,40 @@ const cctvDirs = {
 };
 
 const cctvs = [];
-for (let y = 0; y < N; y++) {
-  for (let x = 0; x < M; x++) {
-    const v = office[y][x];
-    if (v >= 1 && v <= 5) cctvs.push({ y, x, type: v });
+for (let i = 0; i < N; i++) {
+  for (let j = 0; j < M; j++) {
+    const v = office[i][j];
+    if (v >= 1 && v <= 5) cctvs.push({ y: i, x: j, type: v });
   }
 }
 
 let minBlind = Infinity;
 
-function simulate(orders) {
+if (cctvs.length === 0) {
+  let cnt = 0;
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < M; j++) {
+      if (office[i][j] === 0) cnt++;
+    }
+  }
+  console.log(cnt);
+  process.exit();
+}
+
+const radixes = cctvs.map(c => cctvDirs[c.type].length);
+const totalComb = radixes.reduce((a, b) => a * b, 1);
+
+for (let comb = 0; comb < totalComb; comb++) {
   const tmp = office.map(row => row.slice());
+  let t = comb;
 
   for (let i = 0; i < cctvs.length; i++) {
     const { y, x, type } = cctvs[i];
-    const dirs = cctvDirs[type][orders[i]];
+    const base = radixes[i];
+    const ord = t % base;
+    t = Math.floor(t / base);
+    const dirs = cctvDirs[type][ord];
+
     for (const dir of dirs) {
       let ny = y + dy[dir], nx = x + dx[dir];
       while (ny >= 0 && ny < N && nx >= 0 && nx < M && tmp[ny][nx] !== 6) {
@@ -41,38 +59,13 @@ function simulate(orders) {
     }
   }
 
-  let count = 0;
-  for (let i = 0; i < N; i++)
-    for (let j = 0; j < M; j++)
-      if (tmp[i][j] === 0) count++;
-  return count;
-}
-
-// DFS over possible orientations
-function dfs(depth, orders) {
-  if (depth === cctvs.length) {
-    const blind = simulate(orders);
-    if (blind < minBlind) minBlind = blind;
-    return;
+  let blind = 0;
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < M; j++) {
+      if (tmp[i][j] === 0) blind++;
+    }
   }
-
-  const { type } = cctvs[depth];
-  const options = cctvDirs[type].length;
-  for (let i = 0; i < options; i++) {
-    orders.push(i);
-    dfs(depth + 1, orders);
-    orders.pop();
-  }
+  if (blind < minBlind) minBlind = blind;
 }
 
-if (cctvs.length === 0) {
-  // No CCTV: count zeros directly
-  let zeros = 0;
-  for (let i = 0; i < N; i++)
-    for (let j = 0; j < M; j++)
-      if (office[i][j] === 0) zeros++;
-  console.log(zeros);
-} else {
-  dfs(0, []);
-  console.log(minBlind);
-}
+console.log(minBlind);
